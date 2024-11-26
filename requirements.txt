@@ -4,4 +4,4 @@ matplotlib
 pandas
 scikit-learn
 seaborn
-django-tailwind
+flask
