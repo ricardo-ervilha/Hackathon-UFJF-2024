@@ -5,3 +5,5 @@ pandas
 scikit-learn
 seaborn
 flask
+mysql
+mysql-connector-python
