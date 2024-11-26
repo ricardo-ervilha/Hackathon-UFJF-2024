@@ -11,6 +11,18 @@ class TableController extends Controller
     }
 
     public function display(Request $request){
-        dd($request->all());
+        $name_table = $request->get('name_table');
+
+        if (DB::getSchemaBuilder()->hasTable($name_table)) {
+            // Recupera todos os dados da tabela dinâmica
+            $dados = DB::table($name_table)->get();
+            print($dados);
+
+            // Retorna os dados para a view ou API
+            return response()->json($dados);
+        } else {
+            // Se a tabela não existir, retorna um erro
+            return response()->json(['error' => 'Tabela não encontrada'], 404);
+        }
     }
 }
