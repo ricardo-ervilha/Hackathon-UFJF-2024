@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\TableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,6 @@ Route::get('/', function () {
 
 Route::get('/upload', [UploadController::class, 'index'])->name('upload.index');
 Route::post('/upload-dataset', [UploadController::class, 'receive_dataset'])->name('upload.upload');
+
+Route::get('/select-table',  [TableController::class, 'index'])->name('table.index');
+Route::get('/display-table', [TableController::class, 'display'])->name('table.display');
