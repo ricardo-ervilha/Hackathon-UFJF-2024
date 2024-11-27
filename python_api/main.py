@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 from io import StringIO
+from data_manipulation import format_types
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table
 
 
 app = Flask(__name__)
+
+data_frame = None
 
 """
 Rota para processar o CSV & Salvar na DataBase.
@@ -42,6 +45,35 @@ def save_csv():
             return jsonify({'error': str(e)}), 400
     else:
         return jsonify({'error': 'Arquivo não encontrado no formulário'}), 400
+
+
+@app.route("/format_data", methods=["GET"])
+def format_data():
+    '''
+        data => {
+            "filename" : string,
+            "columnConfigs" : [
+                {
+                    "nomeColuna" : {
+                        "tipo" => type
+                        "separador" => string/char
+                        "eh_tempo" => bool
+                        "american_format" => bool
+                    }
+                },
+            ]
+        }
+    '''
+    configs = request.args.get('values')
+    filename = request.args.get('name')
+
+    df = export_table_to_csv_from_db(filename)
+    df = format_types(df, configs)
+
+    print(df)
+
+    return jsonify({}), 200
+
 
 """
 Rota para conseguir acessar as colunas e tipos de dados disponíveis.

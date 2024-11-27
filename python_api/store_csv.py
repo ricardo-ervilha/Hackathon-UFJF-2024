@@ -137,7 +137,7 @@ def export_table_to_csv_from_db(table_name: str):
             database="hackathon"
         )
         
-        query = f"SELECT * FROM {table_name}"
+        query = f"SELECT * FROM `{table_name}`"
         df = pd.read_sql(query, db_connection)
         db_connection.close()
         return df
