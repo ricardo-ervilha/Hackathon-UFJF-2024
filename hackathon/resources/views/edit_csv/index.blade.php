@@ -4,6 +4,6 @@
 
 @section('content')
     
-@include('form')
+@include('edit_csv.form', ['collection' => $data])
 
 @endsection

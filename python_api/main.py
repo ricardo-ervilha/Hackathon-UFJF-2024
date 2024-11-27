@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 from io import StringIO
-from store_csv import export_table_to_csv_from_db, store_csv_in_database
+from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table
+
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ def home():
 Route to process csv file and send to store in the database MYSQL 
 """
 @app.route("/save_csv", methods=["POST"])
-def name():
+def save_csv():
     #Verificação para ver se o arquivo chegou.
     if 'file_input' not in request.files:
         return jsonify({'error': 'Nenhum arquivo enviado'}), 400
@@ -35,6 +36,20 @@ def name():
             return jsonify({'error': str(e)}), 400
     else:
         return jsonify({'error': 'Arquivo não encontrado no formulário'}), 400
+
+@app.route("/get_metadata", methods=["GET"])
+def get_metadata():    
+    try:
+        name = request.args.get('table')
+        # print(name)
+        metadata = get_columns(name)
+        # print(metadata)
+        return jsonify({'dados': metadata}), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+    
 
 @app.route("/save_register", methods=["POST"])
 def save_register():

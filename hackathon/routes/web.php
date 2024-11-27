@@ -26,5 +26,5 @@ Route::post('/upload-dataset', [UploadController::class, 'receive_dataset'])->na
 Route::get('/select-table',  [TableController::class, 'index'])->name('table.index');
 Route::get('/display-table', [TableController::class, 'display'])->name('table.display');
 
-Route::get('/form-edit-data', [ManipulateDataController::class, 'index'])->name('csv.edit');
+Route::get('/form-edit-data/{name}', [ManipulateDataController::class, 'index'])->name('csv.edit');
 Route::post('/form-edit-data', [ManipulateDataController::class, 'update'])->name('csv.update');
