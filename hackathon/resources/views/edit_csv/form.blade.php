@@ -1,6 +1,6 @@
 <form action="{{ route('csv.update') }}" method="POST">
     @csrf
-    <input name="table_name" type="text" hidden>
+    <input value="{{ $name }}" name="table_name" type="text" hidden>
     @foreach ($collection as $key => $item)
         <div class="">
             <label>{{ $key }}</label>
