@@ -55,4 +55,28 @@ def store_csv_in_database(df: pd.DataFrame, filename: str):
         print(f"Erro ao inserir dados: {err}")
     finally:
         cursor.close()
-        db_connection.close() 
+        db_connection.close()
+
+
+def save_register(register):
+    pass
+
+
+def export_table_to_csv_from_db(table_name: str):
+    try:
+        db_connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="",
+            database="hackathon"
+        )
+        
+        query = f"SELECT * FROM {table_name}"
+        df = pd.read_sql(query, db_connection)
+        return df
+
+    except mysql.connector.Error as err:
+        print(f"Erro ao exportar a tabela: {err}")
+
+    finally:
+        db_connection.close()

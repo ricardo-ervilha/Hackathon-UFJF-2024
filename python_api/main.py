@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 from io import StringIO
-from store_csv import store_csv_in_database
+from store_csv import export_table_to_csv_from_db, store_csv_in_database
 
 app = Flask(__name__)
 
@@ -34,6 +34,17 @@ def name():
             return jsonify({'error': str(e)}), 400
     else:
         return jsonify({'error': 'Arquivo não encontrado no formulário'}), 400
+
+@app.route("/save_register", methods=["POST"])
+def save_register():
+
+    # TODO: realizar o tratamento/rotina de inserção aqui
+
+    #save_register(request.get_json())
+
+    data_frame = export_table_to_csv_from_db("month_value_1")
+
+    return jsonify({}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
