@@ -15,7 +15,7 @@ def map_dtype(dtype):
 
 def store_csv_in_database(df: pd.DataFrame, filename: str):
     
-    df = df.fillna("") # because not a number values
+    df = df.fillna(-1) # because not a number values
     
     db_connection = mysql.connector.connect(
         host="127.0.0.1",

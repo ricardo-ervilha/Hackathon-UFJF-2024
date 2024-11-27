@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import pandas as pd
 from io import StringIO
 from store_csv import export_table_to_csv_from_db, store_csv_in_database
+from create_meta_table import create_meta_table
 
 app = Flask(__name__)
 
@@ -47,4 +48,5 @@ def save_register():
     return jsonify({}), 200
 
 if __name__ == "__main__":
+    create_meta_table()
     app.run(debug=True)
