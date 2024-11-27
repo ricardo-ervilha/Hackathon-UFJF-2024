@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 from io import StringIO
-from store_csv import export_table_to_csv_from_db, store_csv_in_database
+from store_csv import export_table_to_csv_from_db, get_columns, store_csv_in_database
 
 app = Flask(__name__)
 
@@ -42,7 +42,9 @@ def save_register():
 
     #save_register(request.get_json())
 
-    data_frame = export_table_to_csv_from_db("month_value_1")
+    data_frame = get_columns("month_value_1")
+
+    print(data_frame)
 
     return jsonify({}), 200
 
