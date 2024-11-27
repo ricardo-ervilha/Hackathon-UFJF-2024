@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, json, request, jsonify
 import pandas as pd
 from io import StringIO
 from data_manipulation import format_types
@@ -65,12 +65,15 @@ def format_data():
         }
     '''
     configs = request.args.get('values')
+    data = json.loads(configs)
+
     filename = request.args.get('name')
 
     df = export_table_to_csv_from_db(filename)
-    df = format_types(df, configs)
+    df = format_types(df, data)
 
-    print(df)
+    global data_frame
+    data_frame = df
 
     return jsonify({}), 200
 
