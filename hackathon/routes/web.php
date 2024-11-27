@@ -5,6 +5,8 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ManipulateDataController;
 
+use Illuminate\Support\Facades\Http;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,3 +30,8 @@ Route::get('/display-table', [TableController::class, 'display'])->name('table.d
 
 Route::get('/form-edit-data/{name}', [ManipulateDataController::class, 'index'])->name('csv.edit');
 Route::post('/form-edit-data/update', [ManipulateDataController::class, 'update'])->name('csv.update');
+
+Route::get('/teste-img', function(){
+    $url = "http://127.0.0.1:5000/generate_graphics"; // URL para obter os dados
+    $response = Http::get($url, ['file_name' => json_encode('month_value_1')]);
+});

@@ -5,11 +5,10 @@ from data_manipulation import format_types
 from generate_graphs import generate_graphics
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table, insert_value
-
+import mysql.connector
 
 app = Flask(__name__)
 
-data_frame = None
 
 """
 Rota para processar o CSV & Salvar na DataBase.
@@ -48,6 +47,8 @@ def save_csv():
         return jsonify({'error': 'Arquivo não encontrado no formulário'}), 400
 
 
+data_frame = None
+
 @app.route("/format_data", methods=["GET"])
 def format_data():
     '''
@@ -73,8 +74,7 @@ def format_data():
     df = export_table_to_csv_from_db(filename)
     df, column_name = format_types(df, data)
 
-    global data_frame
-    data_frame = df
+    df.to_csv("yan.csv")
 
     insert_value(filename, column_name)
 
@@ -83,7 +83,29 @@ def format_data():
 
 @app.route("/generate_graphics", methods=["GET"])
 def generate_graphics_route():
-    generate_graphics(data_frame)
+    file_name = request.args.get('file_name').strip('"')
+    db_connection = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="",
+        database="hackathon"
+    )
+
+    # Criando um cursor para executar a consulta
+    cursor = db_connection.cursor()
+
+    # Consulta SQL
+    query = "SELECT * FROM csv_files WHERE file_name = %s"
+
+    # Executando a consulta
+    cursor.execute(query, (file_name,))
+
+    # Obtendo os resultados
+    time_column = cursor.fetchall()[0][1]
+    print(time_column)
+    data_frame = pd.read_csv("yan.csv", header=0)
+    generate_graphics(data_frame[time_column], data_frame['Revenue'], title="Testando")
+    # generate_graphics(data_frame)
     return jsonify({}), 200
 
 
