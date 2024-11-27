@@ -27,7 +27,7 @@ class ManipulateDataController extends Controller
         // Agora, $dados é um array associativo com o formato desejado
         // Exemplo: ['Average_cost' => 'float', 'Period' => 'varchar(255)', ...]
 
-        return view('edit_csv.index', ['data' => $dados]);
+        return view('edit_csv.index', ['data' => $dados, 'name' => $name]);
         
     }
 
