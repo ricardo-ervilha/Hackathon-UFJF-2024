@@ -5,6 +5,6 @@
 @section('content')
     
 <h1>Printando as tabelas...</h1>
-{{-- <x-table :columns=$columns :values=$values></x-table> --}}
+<x-table :columns=$columns :values=$values></x-table>
 
 @endsection
