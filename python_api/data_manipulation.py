@@ -25,7 +25,7 @@ def format_types(df: pd.DataFrame, configs: dict):
             df[col_name] = df[col_name].astype(str)
 
         # Marcar a coluna como índice se for tempo
-        #if eh_tempo:
-            #df.set_index(col_name, inplace=True)
+        if eh_tempo:
+            time_column = col_name
 
-    return df
+    return df, time_column

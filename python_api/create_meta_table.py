@@ -26,3 +26,19 @@ def create_meta_table():
     
     cursor.close()
     db_connection.close()
+
+def insert_value(filename: str, time_column: str):
+    db_connection = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="",
+        database="hackathon"
+    )
+    
+    cursor = db_connection.cursor()
+
+    insert_column_value = f"INSERT INTO csv_files VALUES({filename}, {time_column})"
+
+    cursor.execute(insert_column_value)
+    cursor.close()
+    db_connection.close()

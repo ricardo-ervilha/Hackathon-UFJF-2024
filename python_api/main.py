@@ -2,8 +2,9 @@ from flask import Flask, json, request, jsonify
 import pandas as pd
 from io import StringIO
 from data_manipulation import format_types
+from generate_graphs import generate_graphics
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
-from create_meta_table import create_meta_table
+from create_meta_table import create_meta_table, insert_value
 
 
 app = Flask(__name__)
@@ -70,12 +71,21 @@ def format_data():
     filename = request.args.get('name')
 
     df = export_table_to_csv_from_db(filename)
-    df = format_types(df, data)
+    df, column_name = format_types(df, data)
 
     global data_frame
     data_frame = df
 
+    insert_value(filename, column_name)
+
     return jsonify({}), 200
+
+
+@app.route("/generate_graphics", methods=["GET"])
+def generate_graphics_route():
+    generate_graphics(data_frame)
+    return jsonify({}), 200
+
 
 
 """
