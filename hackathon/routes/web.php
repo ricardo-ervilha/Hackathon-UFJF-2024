@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ManipulateDataController;
+use App\Http\Controllers\GraphController;
 
 use Illuminate\Support\Facades\Http;
 
@@ -22,6 +23,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+/** Pipeline
+ *  Rotas de UPLOAD => Rotas de Selecionar Tabelas => Rotas de Editar Tabela => Rotas de Display do Gráfico Relacionado
+ */
+
 Route::get('/upload', [UploadController::class, 'index'])->name('upload.index');
 Route::post('/upload-dataset', [UploadController::class, 'receive_dataset'])->name('upload.upload');
 
@@ -31,7 +36,4 @@ Route::get('/display-table', [TableController::class, 'display'])->name('table.d
 Route::get('/form-edit-data/{name}', [ManipulateDataController::class, 'index'])->name('csv.edit');
 Route::post('/form-edit-data/update', [ManipulateDataController::class, 'update'])->name('csv.update');
 
-Route::get('/teste-img', function(){
-    $url = "http://127.0.0.1:5000/generate_graphics"; // URL para obter os dados
-    $response = Http::get($url, ['file_name' => json_encode('month_value_1')]);
-});
+Route::get('/graph', [GraphController::class, 'retrieve_graph'])->name('graph.retrieve');
