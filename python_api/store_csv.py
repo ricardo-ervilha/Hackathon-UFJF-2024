@@ -1,3 +1,4 @@
+from flask import json
 import pandas as pd
 import mysql.connector
 
@@ -60,6 +61,34 @@ def store_csv_in_database(df: pd.DataFrame, filename: str):
 
 def save_register(register):
     pass
+
+
+def get_columns(table_name: str):
+    try:
+        db_connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="",
+            database="hackathon"
+        )
+        
+        cursor = db_connection.cursor()
+        query = f"DESCRIBE {table_name}"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        
+        # Criar o dicionário com nome da coluna como chave e tipo como valor
+        schema_dict = {row[0]: row[1] for row in results}
+        
+        # Converter para JSON
+        schema_json = json.dumps(schema_dict, indent=4)
+        return schema_json
+
+    except mysql.connector.Error as err:
+        print(f"Erro ao obter o esquema da tabela: {err}")
+
+    finally:
+        db_connection.close()
 
 
 def export_table_to_csv_from_db(table_name: str):

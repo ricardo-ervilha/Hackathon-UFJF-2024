@@ -43,7 +43,9 @@ def save_register():
 
     #save_register(request.get_json())
 
-    data_frame = export_table_to_csv_from_db("month_value_1")
+    data_frame = get_columns("month_value_1")
+
+    print(data_frame)
 
     return jsonify({}), 200
 
