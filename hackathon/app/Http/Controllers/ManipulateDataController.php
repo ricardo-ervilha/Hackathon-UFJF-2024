@@ -8,8 +8,13 @@ use Illuminate\Support\Facades\Http;
 
 class ManipulateDataController extends Controller
 {
+    /**
+     * Display do formulário com as colunas e tipos de dados para o usuário.
+     * @param \Illuminate\Http\Request $request
+     * @param string $name
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index(Request $request, String $name){
-        // dd($name);
         $url = "http://127.0.0.1:5000/get_metadata"; // URL para obter os dados
         $response = Http::get($url, ['table' => $name]); // Envia 'table' na query string
 

@@ -1,7 +1,12 @@
 import mysql.connector
 
 """
-Tabela responsável por organizar os metadados...
+Função auxiliar para criar uma meta_tabela csv_files, que armazenará "NOME_CSV" <=> "COLUNA_TEMPO"
+@parameter
+-----------------------------
+
+@return
+-----------------------------
 """
 def create_meta_table():
     db_connection = mysql.connector.connect(
@@ -15,8 +20,7 @@ def create_meta_table():
     
     create_table_txt = f"""CREATE TABLE IF NOT EXISTS csv_files (
         file_name TEXT NOT NULL,
-        time_column TEXT NOT NULL,
-        imported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        time_column TEXT NOT NULL
     );"""
     cursor.execute(create_table_txt)
     

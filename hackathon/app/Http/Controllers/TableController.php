@@ -7,10 +7,23 @@ use Illuminate\Support\Facades\DB;
 
 class TableController extends Controller
 {
+    /**
+     * Retorna a página index para escolher qual a tabela pelo nome
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index(Request $request){
-        return view('display.index');
+        $tables = DB::select('SHOW TABLES');
+
+        $tables = array_map('current', $tables);
+        return view('display.index')->with('names', $tables);
     }
 
+    /**
+     * Display da tabela baseado no select escolhido pelo user
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
+     */
     public function display(Request $request){
         $name_table = $request->get('name_table');
 
