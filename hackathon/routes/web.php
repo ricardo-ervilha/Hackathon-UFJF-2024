@@ -27,4 +27,4 @@ Route::get('/select-table',  [TableController::class, 'index'])->name('table.ind
 Route::get('/display-table', [TableController::class, 'display'])->name('table.display');
 
 Route::get('/form-edit-data/{name}', [ManipulateDataController::class, 'index'])->name('csv.edit');
-Route::post('/form-edit-data', [ManipulateDataController::class, 'update'])->name('csv.update');
+Route::post('/form-edit-data/update', [ManipulateDataController::class, 'update'])->name('csv.update');
