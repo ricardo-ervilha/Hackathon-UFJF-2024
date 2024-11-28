@@ -41,7 +41,8 @@ Route::post('/form-edit-data/update', [ManipulateDataController::class, 'update'
 
 Route::get('/graph', [GraphController::class, 'retrieve_graph'])->name('graph.retrieve');
 
-Route::get('/regras-validacao', [ValidationController::class, 'index'])->name('validation.index');
+Route::get('/regras-validacao/{file_name}', [ValidationController::class, 'index'])->name('validation.index');
+Route::post('/regras-validacao', [ValidationController::class, 'validation'])->name('validation.validation');
 
 Route::get('/filtro', [FilterController::class, 'index'])->name('filter.index');
 
