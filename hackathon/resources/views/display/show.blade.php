@@ -19,6 +19,7 @@
     <div class="container mx-auto w-full">
         <div class="flex flex-col items-center w-full justify-center min-h-screen bg-[#f2a649]">
             <h1 class="text-lg font-medium mb-4 mt-4">CSV: <span class="font-bold">{{ request('name_table') }}</span></h1>
+            <p class="text-lg font-medium mb-4 mt-4">Impressão do CSV após remover linhas com valores <span class="font-bold">nan</span>.</p>
             <div class="w-full max-w-6xl bg-white shadow-md rounded-lg p-6">
                 <x-table :columns="$columns" :values="$values"></x-table>
             </div>

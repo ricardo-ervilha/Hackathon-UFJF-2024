@@ -5,6 +5,9 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ManipulateDataController;
 use App\Http\Controllers\GraphController;
+use App\Http\Controllers\ValidationController;
+use App\Http\Controllers\FilterController;
+use App\Http\Controllers\LaunchController;
 
 use Illuminate\Support\Facades\Http;
 
@@ -37,3 +40,9 @@ Route::get('/form-edit-data/{name}', [ManipulateDataController::class, 'index'])
 Route::post('/form-edit-data/update', [ManipulateDataController::class, 'update'])->name('csv.update');
 
 Route::get('/graph', [GraphController::class, 'retrieve_graph'])->name('graph.retrieve');
+
+Route::get('/regras-validacao', [ValidationController::class, 'index'])->name('validation.index');
+
+Route::get('/filtro', [FilterController::class, 'index'])->name('filter.index');
+
+Route::get('/lancamento', [LaunchController::class, 'index'])->name('laucnh.index');

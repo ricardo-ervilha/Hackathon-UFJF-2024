@@ -28,7 +28,7 @@ Função auxiliar para realizar o armazenamento de um CSV dentro da Database.
 """
 def store_csv_in_database(df: pd.DataFrame, filename: str):
     
-    df = df.fillna(-1) # PREENCHE VALORES NAN COMO -1
+    df = df.dropna() # PREENCHE VALORES NAN COMO -1
     
     db_connection = mysql.connector.connect(
         host="127.0.0.1",

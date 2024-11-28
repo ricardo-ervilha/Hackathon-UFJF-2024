@@ -69,12 +69,14 @@ def format_data():
     configs = request.args.get('values')
     data = json.loads(configs)
 
-    filename = request.args.get('name')
+    filename = request.args.get('name').strip('"')
+    # print("==========================")
+    # print(filename)
 
     df = export_table_to_csv_from_db(filename)
     df, column_name = format_types(df, data)
 
-    df.to_csv("temp_storage.csv")
+    df.to_csv(f"./csv/{filename}.csv")
 
     insert_value(filename, column_name)
 
@@ -103,7 +105,7 @@ def generate_graphics_route():
     # Obtendo os resultados
     time_column = cursor.fetchall()[0][1]
     print(time_column)
-    data_frame = pd.read_csv("yan.csv", header=0)
+    data_frame = pd.read_csv(f"./csv/{file_name}.csv", header=0)
     generate_graphics(data_frame[time_column], data_frame['Revenue'], title="Testando", filename=file_name)
     
     path = f"{file_name}.png"
