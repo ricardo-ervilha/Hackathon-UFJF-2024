@@ -15,7 +15,7 @@
                 <tr class="bg-white dark:bg-gray-800">
                     @foreach($columns as $col)
                         <td class="px-6 py-4">
-                            {{ $val->$col }}
+                            {{ $val->$col == -1 ? '' : $val->$col }}
                         </td>
                     @endforeach
                 </tr>

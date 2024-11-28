@@ -24,8 +24,8 @@
             </div>
             <div class="w-full flex justify-end mb-4">
                 <a href="{{ route('csv.edit', request('name_table')) }}" class="mt-6">
-                    <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded">
-                        Seguir para definição dos dados...
+                    <button class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded">
+                        Seguir para definição do Metamodelo...
                     </button>
                 </a>
             </div>
