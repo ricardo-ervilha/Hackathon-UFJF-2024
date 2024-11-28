@@ -74,7 +74,7 @@ def format_data():
     df = export_table_to_csv_from_db(filename)
     df, column_name = format_types(df, data)
 
-    df.to_csv("yan.csv")
+    df.to_csv("temp_storage.csv")
 
     insert_value(filename, column_name)
 
@@ -148,5 +148,5 @@ def get_metadata():
 #     return jsonify({}), 200
 
 if __name__ == "__main__":
-    create_meta_table() # create meta table if not exists...
+    #create_meta_table() # create meta table if not exists...
     app.run(debug=True)
