@@ -44,7 +44,40 @@ class LaunchController extends Controller
             'value_to_launch' => $value_to_launch,
             'time_column' => $time_column_name
         ]);
+        $indices = $response->json('error');
 
-        dd($response);
+        if(!empty($indices)){
+            /**-------------------------------------------------------------------- */
+
+            $filePath = base_path('database/rules.json');
+
+            // Verifica se o arquivo existe
+            if (!file_exists($filePath)) {
+                return response()->json(['error' => 'Arquivo não encontrado'], 404);
+            }
+
+            // Lê o conteúdo do arquivo
+            $jsonContent = file_get_contents($filePath);
+
+            // Decodifica o JSON
+            $rules = json_decode($jsonContent, true);
+            // dd($rules["rules"]);
+            
+            /**----------------------------------------------------------------------- */
+            
+            $path = base_path( ".." . DIRECTORY_SEPARATOR . 'python_api' . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . $filename . ".json");
+            $fileContents = file_get_contents($path); // Exemplo para ler o conteúdo do arquivo
+
+
+            // Decodifica o JSON
+            $valores_porcentagem = json_decode($fileContents, true);
+            $valores_porcentagem = json_decode($valores_porcentagem, true);
+            // dd($response->json('error'));
+
+            return view('launch.error',[ 'column_to_launch' => $column_to_launch,'rules_error' => $indices, 'filename' => $filename, 'dict' => $rules["rules"], 'value' => $value_to_launch, 'valores_percent' => $valores_porcentagem[$column_to_launch]]);
+        }else{
+            return view('launch.sucess',[ 'column_to_launch' => $column_to_launch, 'filename' => $filename, 'value' => $value_to_launch]);
+        }
+        
     }
 }
