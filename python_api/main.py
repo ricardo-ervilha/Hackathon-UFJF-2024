@@ -104,9 +104,11 @@ def generate_graphics_route():
     time_column = cursor.fetchall()[0][1]
     print(time_column)
     data_frame = pd.read_csv("yan.csv", header=0)
-    generate_graphics(data_frame[time_column], data_frame['Revenue'], title="Testando")
-    # generate_graphics(data_frame)
-    return jsonify({}), 200
+    generate_graphics(data_frame[time_column], data_frame['Revenue'], title="Testando", filename=file_name)
+    
+    path = f"{file_name}.png"
+    
+    return jsonify({'path': path}), 200
 
 
 

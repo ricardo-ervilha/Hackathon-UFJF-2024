@@ -73,6 +73,12 @@ class ManipulateDataController extends Controller
         // Debug para verificar o resultado
         $url = "http://127.0.0.1:5000/format_data"; // URL para obter os dados
         $response = Http::get($url, ['values' => json_encode($jsonOutput), 'name' => json_encode($table_name)]);
-        }
+        
 
+        if($response->status() == 200){
+            return redirect()->route('graph.retrieve', ['file_name' => $table_name]);
+        }else{
+            abort(500);
+        }
+    }
 }
