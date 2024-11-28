@@ -2,7 +2,7 @@ from flask import Flask, json, request, jsonify
 import pandas as pd
 from io import StringIO
 from data_manipulation import format_types, get_dataframe, insertion_is_valid, verify_if_period_exists_in_dataframe
-from generate_graphs import generate_graphics
+from generate_graphs import generate_error_graphic, generate_graphics
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table, insert_value
 import mysql.connector
@@ -90,14 +90,13 @@ def launch_value():
         if verify_if_period_exists_in_dataframe(df, time, time_column_name):
             df.loc[time, column_to_launch] = float(value_to_launch)
         else:
-            #new_row = pd.DataFrame({time_column_name : time, column_to_launch : float(value_to_launch)})
-            #df = pd.concat([df, new_row], ignore_index=True, axis=0)
             df.loc[len(df), [time_column_name, column_to_launch]] = [time, float(value_to_launch)]
         
         path = f'./csv/{filename}.csv'
         df.to_csv(path)
         return jsonify({}), 200
     else:
+        generate_error_graphic(df, time_column_name, time, column_to_launch, float(value_to_launch), filename)
         return jsonify({"error" : [int(id_item) for id_item in ids]}), 500
 
 
@@ -216,5 +215,5 @@ def get_metadata():
 #     return jsonify({}), 200
 
 if __name__ == "__main__":
-    #create_meta_table() # create meta table if not exists...
+    create_meta_table() # create meta table if not exists...
     app.run(debug=True)
