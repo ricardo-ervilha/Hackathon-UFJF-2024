@@ -117,7 +117,7 @@ def generate_graphics_route():
     # print(time_column) => sabemos quem é a time column (!!!)
     
     data_frame = pd.read_csv(f"./csv/{file_name}.csv", index_col=0)
-    
+    print('====================================')
     generate_graphics(data_frame, time_column, filename=file_name)
     
     path = f"{file_name}.png" #path do laravel...
