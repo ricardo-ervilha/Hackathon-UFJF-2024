@@ -6,7 +6,7 @@ from generate_graphs import generate_graphics
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table, insert_value
 import mysql.connector
-from store_json import save_json
+from store_json import save_json_aux
 
 app = Flask(__name__)
 
@@ -52,10 +52,13 @@ data_frame = None
 
 @app.route("/save_json", methods=["POST"])
 def save_json():
-    data = request.data
-    filename = "teste"
+    json_data = request.get_json()
 
-    save_json(data,filename)
+    # Acessa os dados e o nome do arquivo (supondo que a estrutura seja {"table": "filename", "data": {...}})
+    table = json_data.get('table')
+    data = json_data.get('data')
+    
+    save_json_aux(data,table)
 
     return jsonify({}), 200
 

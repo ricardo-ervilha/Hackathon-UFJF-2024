@@ -68,7 +68,12 @@ class ValidationController extends Controller
             }
         }
 
+        $filename = $request->get('file_name');
+        $url = "http://127.0.0.1:5000/save_json"; // URL para obter os dados
+        $response = Http::post($url, ['table' => $filename, 'data' => json_encode($jsonResponse)]);
         // Retorna o JSON gerado
-        dd(response()->json($jsonResponse));
+        if($response->status() == 200){
+            return redirect()->route('launch.index', ['filename' => $filename]);
+        }
     }
 }

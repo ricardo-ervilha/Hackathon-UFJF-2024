@@ -1,6 +1,6 @@
 import json
 
-def save_json(data, filename):
+def save_json_aux(data, filename):
     path = f'./storage/{filename}.json'
     
     with open(path, "w") as arquivo:
