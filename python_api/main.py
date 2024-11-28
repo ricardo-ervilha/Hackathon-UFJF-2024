@@ -6,6 +6,7 @@ from generate_graphs import generate_graphics
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table, insert_value
 import mysql.connector
+from store_json import save_json
 
 app = Flask(__name__)
 
@@ -48,6 +49,16 @@ def save_csv():
 
 
 data_frame = None
+
+@app.route("/save_json", methods=["POST"])
+def save_json():
+    data = request.data
+    filename = "teste"
+
+    save_json(data,filename)
+
+    return jsonify({}), 200
+
 
 @app.route("/format_data", methods=["GET"])
 def format_data():

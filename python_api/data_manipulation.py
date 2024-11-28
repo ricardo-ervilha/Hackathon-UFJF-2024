@@ -29,3 +29,54 @@ def format_types(df: pd.DataFrame, configs: dict):
             time_column = col_name
 
     return df, time_column
+
+
+def insertion_is_valid(value, df, column_name, rules):
+    """
+    Verifica se a inserção é válida com base nas regras fornecidas.
+    """
+    column_rules = rules[column_name]["rules"]
+
+    for rule in column_rules:
+        rule_id = rule["id"]
+
+        if rule_id == 0:
+            continue
+        elif rule_id == 1 and not is_bigger_than_average_of_the_previous_five_releases(value, df, column_name):
+            return False
+        elif rule_id == 2 and not is_bigger_than_previous_release(value, df, column_name):
+            return False
+        elif rule_id == 3 and not is_bigger_than_highest_value_ever_recorded(value, df, column_name):
+            return False
+        elif rule_id == 4 and not is_less_than_highest_value_ever_recorded(value, df, column_name):
+            return False
+
+    return True
+
+def is_bigger_than_average_of_the_previous_five_releases(value, df, column_name):
+    last_five = df[column_name].iloc[-5:]  # Obtém os últimos cinco valores da coluna
+    if len(last_five) < 5:
+        return False  
+    average = last_five.mean() 
+    return value > average
+
+
+def is_bigger_than_previous_release(value, df, column_name):
+    if df.empty:
+        return True  # Se não houver lançamentos anteriores, permite a inserção
+    previous_value = df[column_name].iloc[-1]  # Obtém o último valor
+    return value > previous_value
+
+
+def is_bigger_than_highest_value_ever_recorded(value, df, column_name):
+    if df.empty:
+        return True  # Se não houver registros, permite a inserção
+    highest_value = df[column_name].max()  # Obtém o maior valor registrado
+    return value > highest_value
+
+
+def is_less_than_highest_value_ever_recorded(value, df, column_name):
+    if df.empty:
+        return False  # Se não houver registros, não permite a inserção
+    highest_value = df[column_name].max()  # Obtém o maior valor registrado
+    return value < highest_value

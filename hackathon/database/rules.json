@@ -1,25 +1,25 @@
 {
-    "rules": [
-      {
-        "id": 0,
-        "text": "O lançamento não pode ser _% superior em relação à curva de uma raça em específico"
-      },
-      {
-        "id": 1,
-        "text": "O lançamento não pode ser _% superior em relação à media dos 5 lançamentos anteriores. "
-      },
-      {
-        "id": 2,
-        "text": "O lançamento não pode ser _% superior ao lançamento anterior."
-      },
-      {
-        "id": 3,
-        "text": "O lançamento atual não pode exceder _% do maior valor já registrado na série temporal."
-      },
-      {
-        "id": 4,
-        "text": "O lançamento atual não pode exceder _% do menor valor já registrado na série temporal."
-      }
-    ]
-  }
+  "rules": [
+    {
+      "id": 0,
+      "text": "O lançamento não pode ser _% superior em relação à curva de uma raça em específico"
+    },
+    {
+      "id": 1,
+      "text": "O lançamento não pode ser _% superior em relação à media dos 5 lançamentos anteriores. "
+    },
+    {
+      "id": 2,
+      "text": "O lançamento não pode ser _% superior ao lançamento anterior."
+    },
+    {
+      "id": 3,
+      "text": "O lançamento atual não pode exceder _% do maior valor já registrado na série temporal."
+    },
+    {
+      "id": 4,
+      "text": "O lançamento atual não pode exceder _% do menor valor já registrado na série temporal."
+    }
+  ]
+}
   
