@@ -31,16 +31,18 @@ class LaunchController extends Controller
         
         $column_to_launch = $request->get('column'); 
         $time_column_value = $request->get('time_column_value'); 
-        $value_to_launch = $request->get('value_column'); 
+        $value_to_launch = $request->get('value_column');
+        $time_column_name = $request->get('time_column');
 
         $filename = $request->get('filename');
         $url = "http://127.0.0.1:5000/launch_value"; // URL para obter os dados
-        $response = Http::get($url,
+        $response = Http::post($url,
          [
             'filename' => $filename, 
             'time_column_value'  => $time_column_value,
             'column_to_launch' => $column_to_launch,
-            'value_to_launch' => $value_to_launch
+            'value_to_launch' => $value_to_launch,
+            'time_column' => $time_column_name
         ]);
 
         dd($response);

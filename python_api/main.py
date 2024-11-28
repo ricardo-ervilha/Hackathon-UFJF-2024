@@ -1,7 +1,7 @@
 from flask import Flask, json, request, jsonify
 import pandas as pd
 from io import StringIO
-from data_manipulation import format_types
+from data_manipulation import format_types, get_dataframe, insertion_is_valid, verify_if_period_exists_in_dataframe
 from generate_graphs import generate_graphics
 from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
 from create_meta_table import create_meta_table, insert_value
@@ -61,6 +61,44 @@ def save_json():
     save_json_aux(data,table)
 
     return jsonify({}), 200
+
+
+@app.route("/launch_value", methods=["POST"])
+def launch_value():
+    json_data = request.get_json()
+
+    time = json_data.get('time_column_value')
+    time_column_name = json_data.get("time_column")
+    column_to_launch = json_data.get('column_to_launch')
+    value_to_launch = json_data.get('value_to_launch')
+
+    filename = json_data.get('filename')
+
+    df = get_dataframe(filename)
+
+    path = f'./storage/{filename}.json'
+    with open(path, 'r') as file:
+        rules_str = file.read()  # Lê o conteúdo como string
+        rules = json.loads(rules_str)
+        if isinstance(rules, str):  # Se rules for uma string, decodifique novamente
+            rules = json.loads(rules)
+
+    is_valid, ids = insertion_is_valid(value_to_launch, df, column_to_launch, rules)
+
+    print(ids)
+    if is_valid:
+        if verify_if_period_exists_in_dataframe(df, time, time_column_name):
+            df.loc[time, column_to_launch] = float(value_to_launch)
+        else:
+            #new_row = pd.DataFrame({time_column_name : time, column_to_launch : float(value_to_launch)})
+            #df = pd.concat([df, new_row], ignore_index=True, axis=0)
+            df.loc[len(df), [time_column_name, column_to_launch]] = [time, float(value_to_launch)]
+        
+        path = f'./csv/{filename}.csv'
+        df.to_csv(path)
+        return jsonify({}), 200
+    else:
+        return jsonify({"error" : [int(id_item) for id_item in ids]}), 500
 
 
 @app.route("/format_data", methods=["GET"])

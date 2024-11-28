@@ -2,7 +2,7 @@
   "rules": [
     {
       "id": 0,
-      "text": "O lançamento não pode ser _% superior em relação à curva de uma raça em específico"
+      "text": "O lançamento não pode ser _% superior em relação à curva de uma coluna em específico"
     },
     {
       "id": 1,

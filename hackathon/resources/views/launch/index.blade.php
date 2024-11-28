@@ -14,6 +14,7 @@
     <div id="dropzone-container" class="flex flex-col items-center justify-center w-full">
             @csrf
             <input name="filename" type="text" hidden value="{{ $filename }}">
+            <input name="time_column" type="text" hidden value="{{ $time_column }}">
             <div class="w-full flex flex-col justify-center">
                 <div class="mb-2 mt-2">
                     <label for="time_column_value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Valor de "{{ $time_column }}"</label>
