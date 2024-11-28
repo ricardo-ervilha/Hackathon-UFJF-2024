@@ -18,7 +18,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="flex items-center justify-center h-screen w-screen bg-[#f2a649]">
+        <div class="flex items-center flex-col justify-center h-screen w-screen bg-[#f2a649] relative">
+            <div class="absolute top-2 right-2">
+                <img width="80px" src="{{ asset('img/logo2024.png') }}" alt="">
+            </div>
             @yield('content')
         </div>
     </div>

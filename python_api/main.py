@@ -82,7 +82,17 @@ def format_data():
 
     return jsonify({}), 200
 
+"""
+Rota para Geração dos gráficos iniciais.
+@request
+-----------------------------
+* file_name STR: nome do arquivo
 
+@return
+-----------------------------
+* retorna 200 em caso de ter salvado corretamente.
+* retorna 400 em caso de erro.
+"""
 @app.route("/generate_graphics", methods=["GET"])
 def generate_graphics_route():
     file_name = request.args.get('file_name').strip('"')
@@ -104,11 +114,13 @@ def generate_graphics_route():
 
     # Obtendo os resultados
     time_column = cursor.fetchall()[0][1]
-    print(time_column)
-    data_frame = pd.read_csv(f"./csv/{file_name}.csv", header=0)
-    generate_graphics(data_frame[time_column], data_frame['Revenue'], title="Testando", filename=file_name)
+    # print(time_column) => sabemos quem é a time column (!!!)
     
-    path = f"{file_name}.png"
+    data_frame = pd.read_csv(f"./csv/{file_name}.csv", index_col=0)
+    
+    generate_graphics(data_frame, time_column, filename=file_name)
+    
+    path = f"{file_name}.png" #path do laravel...
     
     return jsonify({'path': path}), 200
 

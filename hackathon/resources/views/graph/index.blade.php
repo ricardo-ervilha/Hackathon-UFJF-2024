@@ -12,7 +12,8 @@
             {{ $file_name }}
         </p>
     </div>
-    <img class="" src="{{ asset("img/" . $path) }}" alt="">
+    <img width="1328px" style="border-radius: 15px;" src="{{ asset('img/' . $path) }}" alt="">
+
 </div>
 
 @endsection
