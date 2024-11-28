@@ -31,7 +31,7 @@ def generate_graphics(data_frame, time_column, filename="output.png"):
     plt.figure(figsize=(20, 10))
     plt.xlabel(time_column)
     plt.xticks(rotation=90)
-    plt.ylabel("Variação dos Valores (NORMALIZADO)")
+    plt.ylabel("Variação dos Valores")
     
     # Iterar pelas colunas, excluindo a de tempo
     for column in data_frame.columns:
