@@ -3,10 +3,12 @@ import pandas as pd
 from io import StringIO
 from data_manipulation import format_types, get_dataframe, insertion_is_valid, verify_if_period_exists_in_dataframe
 from generate_graphs import generate_error_graphic, generate_graphics
-from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns
+from store_csv import export_table_to_csv_from_db, store_csv_in_database, get_columns, retrieve_time_column
 from create_meta_table import create_meta_table, insert_value
 import mysql.connector
 from store_json import save_json_aux
+import google.generativeai as genai
+import os
 
 app = Flask(__name__)
 
@@ -24,7 +26,7 @@ Rota para processar o CSV & Salvar na DataBase.
 """
 @app.route("/save_csv", methods=["POST"])
 def save_csv():
-    
+    create_meta_table() #
     if 'file_input' not in request.files:
         return jsonify({'error': 'Nenhum arquivo enviado!'}), 400 #Verificação para ver se o arquivo chegou.
     
@@ -199,7 +201,155 @@ def get_metadata():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+"""
+Rota para aplicar o filtro usando engenharia de Prompt e Gemini.
+@request
+-----------------------------
+* filename STRING: nome do arquivo CSV (nome da tabela) a ser recuperado os dados.  
+* filter_string STRING: string que o usuário enviou para ser aplicado o processo de filtragem.  
+
+@return
+-----------------------------
+* retorna 200 caso tenha salvado corretamente.
+* retorna 400 em caso de erro.
+"""
+@app.route("/apply_filter", methods=["GET"])
+def apply_filter():
+    filename = request.args.get('filename')   
+    filter_string = request.args.get('filter_string')   
     
+    df = pd.read_csv(f"./csv/{filename}.csv", index_col=0) # recupera o dataframe
+    cols = list(json.loads( get_columns(filename) ).keys())
+    time_column = retrieve_time_column(filename)
+    
+
+    genai.configure(api_key='AIzaSyBMZxHGqpizSJ8zE5xtG-NUXgGyejecpTg')
+
+    # Create the model
+    generation_config = {
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 40,
+        "max_output_tokens": 8192,
+        "response_mime_type": "application/json",
+    }
+
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-pro",
+        generation_config=generation_config,
+    )
+
+    chat_session = model.start_chat(
+        history=[
+            {
+            "role": "user",
+            "parts": [
+                "\"\"\"\n        A aplicação possui um dataframe em memória chamado df. Este dataframe contém várias colunas, cujos nomes exatos serão passados dinamicamente. O dataframe representa uma série temporal, onde o nome da coluna que contém o tempo será passado também. O usuário fornecerá um texto (prompt) especificando um filtro para ser aplicado a esse dataframe.\n\n        O seu objetivo é:\n\n        1) Identificar e extrair os nomes das colunas mencionadas pelo usuário no prompt, verificando se elas correspondem corretamente aos nomes das colunas no dataframe e fazendo uma conversão/adaptação caso necessário.\n        \n        2) Após o passo anterior, gere um código Python válido e eficiente que aplique o filtro no dataframe. Esse código deve ser gerado como uma única instrução utilizando o método `query()` do Pandas para realizar a filtragem. Use operadores lógicos como `&` (para \"e\") e `|` (para \"ou\") no código de filtragem. A variável que armazenará os resultados do filtro será chamada `filtro`.\n\n        A resposta deve ser um JSON com a estrutura:\n        \n        {{\"status\": \"1\", \"codigo\": \"instrucao\" }}\n        \n        \n        Onde \"instrucao\" é o código Python gerado para aplicar o filtro no dataframe, utilizando os nomes de coluna fornecidos e garantindo que o filtro seja corretamente aplicado.\n\n        Exemplos de prompts fornecidos pelo usuário podem ser:\n\n        1) \"Resgatar um valor da coluna <NOME_COLUNA> na coluna do tempo <COLUNA_TEMPO>.\"\n        2) \"Selecionar a relação de medidas do último ano da coluna <NOME_COLUNA>.\"\n\n        O código gerado deve ser o mais eficiente possível e garantir que o filtro seja aplicado corretamente, usando o método `query()` do pandas.\n\n        Gere a resposta no formato JSON com a respectiva instrução gerada para aplicar o filtro. Evite usar acentos, crases ou caracteres especiais no código gerado. A instrução gerada deve ser única e em uma única linha de código Python.\n        Não use and e or dentro da função query, isso pode acarretar em erro de sintaxe.\n        \"\"\"\n    ",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"<NOME_COLUNA> == <VALOR_DA_COLUNA> & <COLUNA_TEMPO> == <VALOR_DA_COLUNA_TEMPO>\\\")\"}\n```",
+            ],
+            },
+            {
+            "role": "user",
+            "parts": [
+                "filtro = df.query('Semana == 20')\nfiltro = df.query('Holandesa > 30')\nfiltro = df.query('Gir < 10')\nfiltro = df.query('Semana > 10 & Holandesa < 25')\nfiltro = df.query('Gir.isna()')\nfiltro = df.query('Semana in [20, 25, 30]')\nfiltro = df.query('coluna_texto.str.contains(\"palavra\")')\nfiltro = df.query('Holandesa + Jersey > 50')\nfiltro = df.query('Semana > 20 & Gir < 15')\n\n",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"Semana == 20 & Holandesa > 30 & Gir < 10 & Semana > 10 & Holandesa < 25 & Gir.isna() & Semana in [20, 25, 30] & coluna_texto.str.contains('palavra') & Holandesa + Jersey > 50 & Semana > 20 & Gir < 15\\\")\"}\n```",
+            ],
+            },
+            {
+            "role": "user",
+            "parts": [
+                "Prompt informado pelo usuário: dado que as colunas são ['Semana', Holandesa', 'Gir'], e a coluna referente ao tempo é Semana. Preciso que você recupere o valor presenta na coluna Holandesa, cuja semana é igual a 20.\n",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"Semana == 20\\\")[\\\"Holandesa\\\"]\"}\n\n```",
+            ],
+            },
+            {
+            "role": "user",
+            "parts": [
+                "Preciso dos valores das colunas Gir e Holandesa, na semana 32.\n",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"Semana == 32\\\")[[\\\"Gir\\\", \\\"Holandesa\\\"]\"}\n\n```",
+            ],
+            },
+            {
+            "role": "user",
+            "parts": [
+                "filtro = df.query(\"Semana == 32\")[[\"Gir\", \"Holandesa\"]]\n",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"Semana == 32\\\")[[\\\"Gir\\\", \\\"Holandesa\\\"]\"}\n```",
+            ],
+            },
+            {
+            "role": "user",
+            "parts": [
+                "Precisa fechar os dois colchetes\n",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"Semana == 32\\\")[[\\\"Gir\\\", \\\"Holandesa\\\"]]\"}\n```",
+            ],
+            },
+            {
+            "role": "user",
+            "parts": [
+                "Preciso do resultado de todas as colunas onde a semana é maior que 16.\n",
+            ],
+            },
+            {
+            "role": "model",
+            "parts": [
+                "```json\n{\"status\": \"1\", \"codigo\": \"filtro = df.query(\\\"Semana > 16\\\")\"}\n```",
+            ],
+            },
+        ]
+        )
+
+    response = chat_session.send_message(f"""Prompt informado pelo usuário: dado que as colunas são {cols}, e a coluna referente ao tempo é {time_column} => {filter_string}""")
+
+    result = response.text
+    print(result)
+    
+    query = result
+    query = json.loads(query)
+    codigo = query["codigo"]
+    
+    print(codigo)
+    
+    my_context = {'df': df, 'filtro': None}
+    exec(codigo, None, my_context)
+    
+    # print(my_context['filtro'])
+    result = my_context['filtro']
+    data_dict = result.to_json(orient='records')
+    print(result)
+    print(type(result))
+    # print(data_dict)
+
+    return jsonify({'data': data_dict}), 200
 
 # @app.route("/save_register", methods=["POST"])
 # def save_register():
@@ -215,5 +365,4 @@ def get_metadata():
 #     return jsonify({}), 200
 
 if __name__ == "__main__":
-    create_meta_table() # create meta table if not exists...
     app.run(debug=True)

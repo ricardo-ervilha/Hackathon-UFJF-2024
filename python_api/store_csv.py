@@ -145,3 +145,27 @@ def export_table_to_csv_from_db(table_name: str):
     except mysql.connector.Error as err:
         print(f"Erro ao exportar a tabela: {err}")
         
+def retrieve_time_column(filename):
+    db_connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="",
+            database="hackathon"
+        )
+    cursor = db_connection.cursor()
+
+    # Consulta SQL para buscar o valor da coluna 'time_column'
+    query = "SELECT time_column FROM csv_files WHERE file_name = %s"
+    cursor.execute(query, (filename,))
+
+    # Obter o resultado
+    result = cursor.fetchone()
+
+    cursor.close()
+    db_connection.close()
+
+    # Exibir o resultado
+    if result:
+        return result[0]  # Primeiro elemento da tupla
+    else:
+        print("Nenhum resultado encontrado.")
