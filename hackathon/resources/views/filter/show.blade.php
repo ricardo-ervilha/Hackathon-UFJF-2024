@@ -31,6 +31,7 @@
                             <li>{{ $key }}: {{ $value }}</li>
                         @endforeach
                     </ul>
+                    <hr>
                 @endforeach
                 </p>
                 <a href="{{ route('filter.index', ['filename'=> $filename]) }}">
