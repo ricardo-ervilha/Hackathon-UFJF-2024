@@ -62,6 +62,8 @@ class LaunchController extends Controller
             // Decodifica o JSON
             $rules = json_decode($jsonContent, true);
             // dd($rules["rules"]);
+
+            // dd($rules);
             
             /**----------------------------------------------------------------------- */
             

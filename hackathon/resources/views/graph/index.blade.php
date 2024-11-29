@@ -12,7 +12,7 @@
             {{ $file_name }}
         </p>
     </div>
-    <img width="1328px" style="border-radius: 15px;" src="{{ asset('img/' . $path) }}" alt="">
+    <img width="560px" style="border-radius: 15px;" src="{{ asset('img/' . $path) }}" alt="">
     <div class="flex flex-col">
         <div class="w-full flex justify-end mb-4">
             <a href="{{ route('graph.download', request('file_name')) }}" class="mt-6">

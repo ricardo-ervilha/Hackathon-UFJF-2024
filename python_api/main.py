@@ -9,6 +9,7 @@ import mysql.connector
 from store_json import save_json_aux
 import google.generativeai as genai
 import os
+import numpy as np
 
 app = Flask(__name__)
 
@@ -361,6 +362,10 @@ def apply_filter():
     
     # print(my_context['filtro'])
     result = my_context['filtro']
+    
+    if(type(result) == np.float64):
+        return jsonify({'data': result}), 200
+    
     data_dict = result.to_json(orient='records')
     print(result)
     print(type(result))

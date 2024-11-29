@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container h-full">
         <div class="flex items-center flex-col justify-center h-full w-screen bg-[#f2a649] relative">
             <div class="absolute top-2 right-2">
                 <img width="80px" src="{{ asset('img/logo2024.png') }}" alt="">
@@ -25,14 +25,25 @@
             <div class="mb-6 text-center">
                 <h1 class="text-2xl mt-4 font-bold text-black-700 dark:text-gray-300">Resultado do Filtro</h1>
                 <p class="text-md font-medium text-gray-700 dark:text-gray-400 mt-2">
-                    @foreach ($result as $item)
-                    <ul>
-                        @foreach ($item as $key => $value)
-                            <li>{{ $key }}: {{ $value }}</li>
+                   
+                    @if (is_array($result))
+                        @foreach ($result as $item)
+                            @if (is_array($item))
+                                <ul>
+                                    @foreach ($item as $key => $value)
+                                        <li>{{ $key }}: {{ $value }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p>{{ $item }}</p>
+                            @endif
+                            <hr>
                         @endforeach
-                    </ul>
-                    <hr>
-                @endforeach
+                    @elseif (is_float($result) || is_numeric($result))
+                        <p>{{ $result }}</p>
+                    @else
+                        <p>O resultado não é válido.</p>
+                    @endif
                 </p>
                 <a href="{{ route('filter.index', ['filename'=> $filename]) }}">
                     <button class="bg-[#f27830] font-medium p-3 mt-4 rounded-lg hover:bg-[#d94929]" type="submit">
