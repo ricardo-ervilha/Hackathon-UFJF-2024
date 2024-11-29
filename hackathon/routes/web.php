@@ -45,6 +45,7 @@ Route::get('/regras-validacao/{file_name}', [ValidationController::class, 'index
 Route::post('/regras-validacao', [ValidationController::class, 'validation'])->name('validation.validation');
 
 Route::get('/filtro', [FilterController::class, 'index'])->name('filter.index');
+Route::get('/filtro/filter', [FilterController::class, 'filter_values'])->name('filter.filter');
 
 Route::get('/lancamento', [LaunchController::class, 'index'])->name('launch.index');
 Route::post('/lancamento/lancar', [LaunchController::class, 'launch'])->name('launch.launch');

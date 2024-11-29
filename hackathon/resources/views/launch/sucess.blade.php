@@ -11,7 +11,7 @@
         Retornar para inserir novos...
     </button>
 </a>
-<a href="">
+<a href="{{ route('filter.index', ['filename'=> $filename]) }}">
     <button class="bg-[#f27830] font-medium p-3 mt-4 rounded-lg hover:bg-[#d94929]" type="submit">
         Avançar para parte de filtros..
     </button>
