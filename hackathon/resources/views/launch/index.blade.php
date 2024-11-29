@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Upload Dataset')
+@section('title', 'Launch Values')
 
 @section('content')
 <form action="{{ route('launch.launch') }}" method="POST">

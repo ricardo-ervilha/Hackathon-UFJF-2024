@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Upload Dataset')
+@section('title', 'Select Your Dataset')
 
 @section('content')
     

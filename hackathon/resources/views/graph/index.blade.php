@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Upload Dataset')
+@section('title', 'Show Time Series Graphic')
 
 @section('content')
     

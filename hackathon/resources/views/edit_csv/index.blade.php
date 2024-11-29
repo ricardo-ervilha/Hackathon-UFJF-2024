@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Upload Dataset')
+@section('title', 'Edit Your Dataset Metamodel')
 
 @section('content')
     
