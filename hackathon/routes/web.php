@@ -40,6 +40,7 @@ Route::get('/form-edit-data/{name}', [ManipulateDataController::class, 'index'])
 Route::post('/form-edit-data/update', [ManipulateDataController::class, 'update'])->name('csv.update');
 
 Route::get('/graph', [GraphController::class, 'retrieve_graph'])->name('graph.retrieve');
+Route::get('/graph/download/{filename}', [GraphController::class, 'download'])->name('graph.download');
 
 Route::get('/regras-validacao/{file_name}', [ValidationController::class, 'index'])->name('validation.index');
 Route::post('/regras-validacao', [ValidationController::class, 'validation'])->name('validation.validation');

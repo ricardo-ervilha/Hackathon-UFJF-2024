@@ -89,17 +89,34 @@ def launch_value():
 
     print(ids)
     if is_valid:
-        if verify_if_period_exists_in_dataframe(df, time, time_column_name):
-            df.loc[time, column_to_launch] = float(value_to_launch)
-        else:
-            df.loc[len(df), [time_column_name, column_to_launch]] = [time, float(value_to_launch)]
+        # Certifique-se de que a coluna de tempo é o índice
+        if time_column_name not in df.index.names:
+            df.set_index(time_column_name, inplace=True)
         
+        # Verifica se o período já existe no índice
+        print(time + " " + str(type(time)) + " " + " " + str(type(df.index)))
+        print(df.index)
+        if float(time) in df.index:
+            # Atualiza o valor na linha existente
+            # mask = df[time_column_name] == time
+
+            # Atualiza o valor na coluna especificada para as linhas correspondentes
+            # df.loc[mask, column_to_launch] = float(value_to_launch)
+            # df.at[time, column_to_launch] = float(value_to_launch)
+            df.loc[float(time), column_to_launch] = float(value_to_launch)
+        else:
+            # Adiciona uma nova linha
+            new_row = {time_column_name: float(time), column_to_launch: float(value_to_launch)}
+            df = pd.concat([df, pd.DataFrame([new_row]).set_index(time_column_name)])
+
+        # Salva o DataFrame no arquivo CSV
         path = f'./csv/{filename}.csv'
         df.to_csv(path)
         return jsonify({}), 200
     else:
+        # Gera gráfico de erro
         generate_error_graphic(df, time_column_name, time, column_to_launch, float(value_to_launch), filename)
-        return jsonify({"error" : [int(id_item) for id_item in ids]}), 500
+        return jsonify({"error": [int(id_item) for id_item in ids]}), 500
 
 
 @app.route("/format_data", methods=["GET"])

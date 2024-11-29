@@ -21,4 +21,14 @@ class GraphController extends Controller
             abort(500);
         }
     }
+
+    public function download(Request $request, String $filename){
+        $path = public_path('img/' . $filename . '.png');
+
+        return response()->download($path, $filename . ".png", [
+            'Cache-Control' => 'no-store',
+        ]);
+
+        return redirect()->route('graph.retrieve')->with('file_name', $filename);
+    }
 }

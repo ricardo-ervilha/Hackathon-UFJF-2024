@@ -3,7 +3,6 @@
 @section('title', 'Upload Dataset')
 
 @section('content')
-    
 <form action="{{ route('launch.launch') }}" method="POST">
     @csrf
     <div class="mb-6 text-center">
